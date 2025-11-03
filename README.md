@@ -35,7 +35,7 @@ El sistema no solo detecta y rastrea a las personas, sino que logra clasificar s
 - Identificar: "iniciador/asaltante", "receptor/víctima", etc.
 
 ## 🛠️ Pipeline del Proyecto
-Detección → Seguimiento → Estimación de Pose → Análisis Temporal → Clasificación → Asignación de Roles
+``Detección → Seguimiento → Estimación de Pose → Análisis Temporal → Clasificación → Asignación de Roles``
 ---
 
 **Nota**: Este proyecto está en desarrollo activo.
