@@ -39,3 +39,14 @@ Detección → Seguimiento → Estimación de Pose → Análisis Temporal → Cl
 ---
 
 **Nota**: Este proyecto está en desarrollo activo.
+
+---
+### Comparativa de Enfoques para Detección de Acciones
+
+| Característica | Enfoque 1 (YOLO + Keras) | Enfoque 2 (Solo Keras 3D-CNN) |
+| :--- | :--- | :--- |
+| **Propósito** | Detección de objetos + Análisis de secuencia | Análisis de video End-to-End |
+| **Velocidad** | **Muy Rápido** (Ideal para tiempo real) | Lento |
+| **Precisión** | Buena a Excelente | Potencialmente la mejor (si tienes datos) |
+| **Datos Req.** | Moderados a Altos | **Masivos** |
+| **Complejidad** | Alta (múltiples pasos) | Extrema (un solo modelo gigante) |
