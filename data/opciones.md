@@ -1,4 +1,0 @@
-- https://universe.roboflow.com/crime-classfier/crime-detection-ekhs2
-- https://www.kaggle.com/datasets/odins0n/ucf-crime-dataset/data
-- https://universe.roboflow.com/nbilya-technologies/crime-detection-brlti/dataset/8
-- https://github.com/mchengny/RWF2000-Video-Database-for-Violence-Detection
