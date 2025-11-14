@@ -1,177 +1,115 @@
 <!doctype html>
-<html lang="es" class="h-full">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Identificador Víctima y Agresor</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body { box-sizing: border-box; }
-    .gradient-bg { background: linear-gradient(135deg, #0F1F38 0%, #1a2332 100%); }
-    .glass { background: rgba(255,255,255,0.1); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.2); }
-    .card { box-shadow: 0 20px 40px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); }
-    .tab-active { background: #475569; color: white; }
-    .tab-inactive { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); }
-    .progress { width: 0%; transition: width 0.5s ease; }
-  </style>
 </head>
-<body class="min-h-screen gradient-bg text-white font-sans">
+<body class="min-h-screen bg-gradient-to-br from-slate-900 to-black text-white flex items-center justify-center p-4">
 
-  <div class="max-w-5xl mx-auto p-6">
+<div class="max-w-2xl w-full space-y-8">
+  <div class="text-center">
+    <h1 class="text-4xl font-bold mb-2">Identificador Víctima y Agresor</h1>
+    <p class="opacity-80">Sube un video o pega un link de YouTube</p>
+  </div>
 
-    <header class="text-center mb-10">
-      <h1 class="text-4xl font-bold mb-2">Identificador Víctima y Agresor</h1>
-      <p class="opacity-80">Análisis automático de violencia con IA</p>
-    </header>
-
-    <!-- Tabs -->
-    <div class="glass rounded-xl p-6 mb-8">
-      <div class="flex gap-4 mb-6">
-        <button id="tab-upload" class="tab-active px-6 py-3 rounded-lg font-bold">Subir Video</button>
-        <button id="tab-youtube" class="tab-inactive px-6 py-3 rounded-lg font-bold">YouTube URL</button>
-      </div>
-
-      <!-- Subir archivo -->
-      <div id="content-upload">
-        <div class="border-2 border-dashed border-gray-400 rounded-xl p-12 text-center">
-          <input type="file" id="video-file" accept="video/*" class="hidden">
-          <p class="text-xl mb-4">Arrastra tu video o haz clic para seleccionar</p>
-          <button onclick="document.getElementById('video-file').click()" class="bg-blue-600 hover:bg-blue-700 px-8 py-3 rounded-lg font-bold">
-            Seleccionar archivo
-          </button>
-          <p id="file-name" class="mt-4 text-green-400 font-bold"></p>
-        </div>
-      </div>
-
-      <!-- YouTube -->
-      <div id="content-youtube" class="hidden">
-        <input type="text" id="youtube-url" placeholder="https://www.youtube.com/watch?v=..." class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 focus:outline-none focus:border-white">
-      </div>
-    </div>
-
-    <!-- Botón principal -->
-    <div class="text-center mb-8">
-      <button id="process-btn" class="bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white font-bold text-2xl py-5 px-16 rounded-xl shadow-2xl transform hover:scale-105 transition">
-        INICIAR ANÁLISIS CON IA
-      </button>
-    </div>
-
-    <!-- Progreso -->
-    <div id="progress" class="hidden glass rounded-xl p-8 text-center">
-      <h3 class="text-2xl mb-4">Procesando video...</h3>
-      <div class="w-full bg-gray-700 rounded-full h-8 overflow-hidden">
-        <div id="bar" class="progress bg-gradient-to-r from-red-600 to-red-800 h-full text-white font-bold flex items-center justify-center">0%</div>
-      </div>
-    </div>
-
-    <!-- Resultados -->
-    <div id="results" class="hidden space-y-8 mt-10">
-      <div class="glass rounded-xl p-8">
-        <h2 class="text-3xl font-bold mb-6">Resumen del análisis</h2>
-        <div id="summary" class="text-lg whitespace-pre-line bg-black/20 p-6 rounded-lg"></div>
-      </div>
-
-      <div class="glass rounded-xl p-8">
-        <h2 class="text-3xl font-bold mb-6">Video procesado</h2>
-        <video id="output-video" controls class="w-full rounded-lg shadow-2xl"></video>
-      </div>
-
-      <div class="grid grid-cols-3 gap-6">
-        <div class="glass rounded-xl p-6 text-center">
-          <div id="aggressors" class="text-5xl font-bold text-red-500">0</div>
-          <p class="mt-2">Agresores</p>
-        </div>
-        <div class="glass rounded-xl p-6 text-center">
-          <div id="victims" class="text-5xl font-bold text-blue-500">0</div>
-          <p class="mt-2">Víctimas</p>
-        </div>
-        <div class="glass rounded-xl p-6 text-center">
-          <div id="frames" class="text-5xl font-bold text-green-500">0</div>
-          <p class="mt-2">Frames con agresor</p>
-        </div>
-      </div>
+  <!-- Subir archivo -->
+  <div class="bg-white/10 backdrop-blur rounded-2xl p-8 border border-white/20">
+    <input type="file" id="video" accept="video/*" class="hidden">
+    <div class="border-4 border-dashed border-white/30 rounded-xl p-12 text-center cursor-pointer hover:border-white/60 transition"
+         onclick="document.getElementById('video').click()">
+      <p class="text-xl mb-4">Arrastra tu video aquí o haz clic</p>
+      <button class="bg-blue-600 hover:bg-blue-700 px-8 py-3 rounded-lg font-bold">Seleccionar archivo</button>
+      <p id="filename" class="mt-4 text-green-400 font-bold"></p>
     </div>
   </div>
 
-  <script>
-    // ESTA LÍNEA ES LA CLAVE: usa el proxy que SÍ funciona con tu Space
-    const BACKEND_URL = "https://api.allorigins.win/raw?url=" + encodeURIComponent("https://camcel-identificador-victima-y-agresor.hf.space/predict");
+  <!-- O YouTube -->
+  <div class="text-center text-2xl opacity-60">o</div>
+  <input type="text" id="youtube" placeholder="https://youtube.com/watch?v=..." 
+         class="w-full px-6 py-4 bg-white/10 border border-white/30 rounded-xl focus:outline-none focus:border-white">
 
-    // Tabs
-    document.getElementById('tab-upload').onclick = () => { switchTab(true); }
-    document.getElementById('tab-youtube').onclick = () => { switchTab(false); }
-    function switchTab(isUpload) {
-      document.getElementById('tab-upload').className = isUpload ? 'tab-active px-6 py-3 rounded-lg font-bold' : 'tab-inactive px-6 py-3 rounded-lg font-bold';
-      document.getElementById('tab-youtube').className = isUpload ? 'tab-inactive px-6 py-3 rounded-lg font-bold' : 'tab-active px-6 py-3 rounded-lg font-bold';
-      document.getElementById('content-upload').classList.toggle('hidden', !isUpload);
-      document.getElementById('content-youtube').classList.toggle('hidden', isUpload);
-    }
+  <!-- Botón -->
+  <div class="text-center">
+    <button id="btn" class="bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white font-bold text-2xl py-6 px-20 rounded-2xl shadow-2xl transform hover:scale-105 transition">
+      INICIAR ANÁLISIS
+    </button>
+  </div>
 
-    // Mostrar nombre del archivo
-    document.getElementById('video-file').onchange = function() {
-      if (this.files[0]) {
-        document.getElementById('file-name').textContent = "Listo: " + this.files[0].name + " (" + (this.files[0].size/1024/1024).toFixed(1) + " MB)";
-      }
-    };
+  <!-- Progreso y resultados -->
+  <div id="progress" class="hidden text-center space-y-6">
+    <p class="text-2xl">Procesando con IA...</p>
+    <div class="w-full bg-gray-700 rounded-full h-12 overflow-hidden">
+      <div id="bar" class="h-full bg-gradient-to-r from-red-600 to-orange-600 text-white font-bold text-xl flex items-center justify-center" style="width:0%">0%</div>
+    </div>
+  </div>
 
-    // BOTÓN PRINCIPAL
-    document.getElementById('process-btn').onclick = async () => {
-      const isUpload = !document.getElementById('content-upload').classList.contains('hidden');
-      const file = isUpload ? document.getElementById('video-file').files[0] : null;
-      const youtube = !isUpload ? document.getElementById('youtube-url').value.trim() : '';
+  <div id="result" class="hidden space-y-8">
+    <div class="bg-white/10 backdrop-blur rounded-2xl p-8">
+      <pre id="summary" class="whitespace-pre-wrap text-lg"></pre>
+    </div>
+    <video id="output" controls class="w-full rounded-2xl shadow-2xl"></video>
+  </div>
+</div>
 
-      if (!file && !youtube) {
-        alert("Por favor sube un video o pega un link de YouTube");
-        return;
-      }
+<script>
+  // ESTE PROXY SÍ FUNCIONA HOY (14 nov 2025) con videos grandes
+  const PROXY = "https://corsproxy.io/?";
+  const BACKEND = PROXY + encodeURIComponent("https://camcel-identificador-victima-y-agresor.hf.space/predict");
 
-      const form = new FormData();
-      if (file) form.append("video", file);
-      if (youtube) form.append("youtube_url", youtube);
-      form.append("aggressor_threshold", "2.8");
-      form.append("victim_threshold", "1.5");
-      form.append("proximity_threshold", "140");
-      form.append("mostrar_interaccion", "Ambos");
+  document.getElementById('video').onchange = () => {
+    const f = document.getElementById('video').files[0];
+    if (f) document.getElementById('filename').textContent = "Listo: " + f.name + " (" + (f.size/1024/1024).toFixed(1) + " MB)";
+  };
 
-      document.getElementById('progress').classList.remove('hidden');
-      document.getElementById('results').classList.add('hidden');
-      let p = 0;
-      const interval = setInterval(() => {
-        p += 10;
-        if (p > 90) p = 90;
-        document.getElementById('bar').style.width = p + '%';
-        document.getElementById('bar').textContent = p + '%';
-      }, 1000);
+  document.getElementById('btn').onclick = async () => {
+    const file = document.getElementById('video').files[0];
+    const yt = document.getElementById('youtube').value.trim();
 
-      try {
-        const res = await fetch(BACKEND_URL, { method: "POST", body: form });
-        const data = await res.json();
+    if (!file && !yt) return alert("Sube un video o pega un link de YouTube");
 
-        clearInterval(interval);
-        document.getElementById('bar').style.width = '100%';
-        document.getElementById('bar').textContent = '100%';
+    const form = new FormData();
+    if (file) form.append("video", file);
+    if (yt) form.append("youtube_url", yt);
+    form.append("aggressor_threshold", "2.8");
+    form.append("victim_threshold", "1.5");
+    form.append("proximity_threshold", "140");
+    form.append("mostrar_interaccion", "Ambos");
 
-        setTimeout(() => {
-          document.getElementById('progress').classList.add('hidden');
-          document.getElementById('results').classList.remove('hidden');
+    document.getElementById('progress').classList.remove('hidden');
+    document.getElementById('result').classList.add('hidden');
+    let p = 0;
+    const iv = setInterval(() => {
+      p += 12;
+      if (p > 90) p = 90;
+      document.getElementById('bar').style.width = p + '%';
+      document.getElementById('bar').textContent = p + '%';
+    }, 1000);
 
-          document.getElementById('summary').textContent = data.resumen || "Análisis completado";
-          if (data.video) document.getElementById('output-video').src = "data:video/mp4;base64," + data.video;
-          if (data.log_json) {
-            document.getElementById('aggressors').textContent = data.log_json.unique_aggressors || 0;
-            document.getElementById('victims').textContent = data.log_json.unique_victims || 0;
-            document.getElementById('frames').textContent = data.log_json.frames_with_aggressor || 0;
-          }
-        }, 800);
+    try {
+      const res = await fetch(BACKEND, { method: "POST", body: form });
+      if (!res.ok) throw new Error("Error " + res.status);
+      const data = await res.json();
 
-      } catch (e) {
-        clearInterval(interval);
+      clearInterval(iv);
+      document.getElementById('bar').style.width = '100%';
+      document.getElementById('bar').textContent = '100%';
+
+      setTimeout(() => {
         document.getElementById('progress').classList.add('hidden');
-        alert("Error: " + e.message);
-        console.error(e);
-      }
-    };
-  </script>
+        document.getElementById('result').classList.remove('hidden');
+        document.getElementById('summary').textContent = data.resumen || "Análisis completado";
+        if (data.video) document.getElementById('output').src = "data:video/mp4;base64," + data.video;
+      }, 800);
+
+    } catch (e) {
+      clearInterval(iv);
+      document.getElementById('progress').classList.add('hidden');
+      alert("Error: " + e.message + "\nInténtalo con un video más corto o con YouTube");
+    }
+  };
+</script>
 </body>
 </html>
 
