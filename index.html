@@ -7,165 +7,192 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body { box-sizing: border-box; }
-    .gradient-bg { background: linear-gradient(135deg, #1e3a8a 0%, #3730a3 50%, #581c87 100%); }
-    .glass-effect { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
-    .card-shadow { box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+    .gradient-bg { background: linear-gradient(135deg, #0F1F38 0%, #1a2332 100%); }
+    .glass-effect { background: rgba(247, 245, 243, 0.12); backdrop-filter: blur(16px); border: 1px solid rgba(247, 245, 243, 0.3); }
+    .card-shadow { box-shadow: 0 25px 50px -12px rgba(15, 31, 56, 0.25), 0 8px 16px -8px rgba(15, 31, 56, 0.1); border: 1px solid rgba(247, 245, 243, 0.15); }
     .processing-animation { animation: pulse 2s infinite; }
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-    .tab-active { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; }
-    .tab-inactive { background: rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.7); }
+    .tab-active { background: #475569; color: #F7F5F3; border: 1px solid rgba(247, 245, 243, 0.4); }
+    .tab-inactive { background: rgba(247, 245, 243, 0.08); color: rgba(247, 245, 243, 0.8); border: 1px solid rgba(247, 245, 243, 0.2); }
     .progress-bar { width: 0%; transition: width 0.3s ease; }
-    .result-card { transition: all 0.3s ease; }
     .result-card:hover { transform: translateY(-2px); }
   </style>
 </head>
-<body class="h-full gradient-bg font-sans text-white">
+<body class="h-full gradient-bg font-sans">
+
   <main class="min-h-full">
     <!-- Header -->
     <header class="glass-effect border-b border-white border-opacity-20">
       <div class="max-w-7xl mx-auto px-6 py-6">
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-4">
-            <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-500 rounded-xl flex items-center justify-center">
-              <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-              </svg>
+            <div class="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-xl flex items-center justify-center shadow-lg border border-red-400">
+              <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
             </div>
             <div>
-              <h1 class="text-2xl font-bold">Identificador Víctima y Agresor</h1>
+              <h1 class="text-2xl font-bold text-white">Identificador Víctima y Agresor</h1>
               <p class="text-sm text-white text-opacity-80">Sistema de Detección de Violencia con IA</p>
             </div>
           </div>
-          <div class="flex items-center space-x-2 bg-green-500 bg-opacity-20 px-3 py-2 rounded-lg">
-            <div class="w-2 h-2 bg-green-400 rounded-full processing-animation"></div>
-            <span class="text-green-300 text-sm font-medium">Sistema Listo</span>
+          <div class="flex items-center space-x-3">
+            <div class="flex items-center space-x-2 bg-slate-600 bg-opacity-25 px-4 py-2 rounded-lg border border-slate-500 border-opacity-30">
+              <div class="w-2 h-2 bg-slate-300 rounded-full processing-animation"></div><span class="text-slate-200 text-sm font-medium">Sistema Seguro</span>
+            </div>
           </div>
         </div>
       </div>
     </header>
 
     <div class="max-w-7xl mx-auto px-6 py-8">
-
       <!-- Input Section -->
-      <div class="bg-white rounded-2xl card-shadow p-8 mb-8 text-gray-800">
-        <h2 class="text-2xl font-bold mb-6 flex items-center">
-          <svg class="w-6 h-6 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-          </svg> Fuente de Video
+      <div class="bg-white rounded-2xl card-shadow p-8 mb-8">
+        <h2 class="text-2xl font-bold text-slate-800 mb-6 flex items-center">
+          <svg class="w-6 h-6 text-red-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg> Fuente de Video
         </h2>
 
         <!-- Tabs -->
         <div class="flex space-x-2 mb-6">
-          <button id="upload-tab" class="tab-active px-6 py-3 rounded-lg font-medium flex items-center space-x-2">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-            </svg>
+          <button id="upload-tab" class="tab-active px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
             <span>Subir Video Local</span>
           </button>
-          <button id="youtube-tab" class="tab-inactive px-6 py-3 rounded-lg font-medium flex items-center space-x-2">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
-            </svg>
+          <button id="youtube-tab" class="tab-inactive px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
             <span>URL de YouTube</span>
           </button>
         </div>
 
         <!-- Upload Content -->
-        <div id="upload-content">
-          <div class="border-2 border-dashed border-gray-300 rounded-xl p-12 text-center hover:border-blue-400 transition-colors">
-            <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-            </svg>
+        <div id="upload-content" class="tab-content">
+          <div class="border-2 border-dashed border-gray-300 rounded-xl p-12 text-center hover:border-blue-400 transition-colors duration-200">
+            <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
             <h3 class="text-lg font-medium text-gray-700 mb-2">Arrastra tu video aquí</h3>
-            <p class="text-gray-500 mb-4">o haz clic para seleccionar</p>
+            <p class="text-gray-500 mb-4">o haz clic para seleccionar un archivo</p>
             <input type="file" id="video-upload" accept="video/*" class="hidden">
-            <button onclick="document.getElementById('video-upload').click()" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg">Seleccionar Video</button>
+            <button onclick="document.getElementById('video-upload').click()" class="bg-slate-600 hover:bg-slate-700 text-white px-6 py-2 rounded-lg transition-all duration-200 shadow-lg border border-slate-500">Seleccionar Video</button>
             <p class="text-xs text-gray-400 mt-2">Formatos: MP4, AVI, MOV, MKV</p>
           </div>
         </div>
 
         <!-- YouTube Content -->
-        <div id="youtube-content" class="hidden">
-          <input type="url" id="youtube-url" placeholder="https://www.youtube.com/watch?v=..." class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-blue-500">
-          <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-4 text-sm text-blue-700">
-            El procesamiento de videos de YouTube puede tardar más.
+        <div id="youtube-content" class="tab-content hidden">
+          <div class="space-y-4">
+            <div><label class="block text-sm font-medium text-gray-700 mb-2">URL de YouTube</label>
+              <input type="url" id="youtube-url" placeholder="https://www.youtube.com/watch?v=..." class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-blue-600 bg-slate-50">
+            </div>
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <div class="flex items-start">
+                <svg class="w-5 h-5 text-slate-600 mt-0.5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <div><h4 class="text-sm font-medium text-slate-700">Nota</h4><p class="text-sm text-slate-600 mt-1">El procesamiento puede tomar más tiempo con videos largos.</p></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Parameters -->
-      <div class="bg-white rounded-2xl card-shadow p-8 mb-8 text-gray-800">
+      <!-- Parameters Section -->
+      <div class="bg-white rounded-2xl card-shadow p-8 mb-8">
         <div class="flex items-center justify-between mb-6">
-          <h2 class="text-2xl font-bold flex items-center">
-            <svg class="w-6 h-6 text-purple-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-            </svg> Parámetros
+          <h2 class="text-2xl font-bold text-slate-800 flex items-center">
+            <svg class="w-6 h-6 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg> Parámetros de Detección
           </h2>
-          <button id="toggle-params" class="text-blue-600 hover:text-blue-700 flex items-center space-x-1">
+          <button id="toggle-params" class="text-blue-600 hover:text-blue-700 font-medium flex items-center space-x-1">
             <span>Mostrar Avanzados</span>
-            <svg class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-            </svg>
+            <svg class="w-4 h-4 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
           </button>
         </div>
 
-        <div id="basic-params" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="p-4 bg-red-50 rounded-lg border border-red-200">
-            <label class="text-sm font-medium text-red-800">Umbral Agresor</label>
-            <input type="range" id="aggressor_thr" min="0" max="1" step="0.1" value="0.7" class="w-full accent-red-500">
-            <div class="flex justify-between text-xs text-red-600"><span>Permisivo</span> <span>0.7</span> <span>Estricto</span></div>
+        <!-- Basic Parameters -->
+        <div id="basic-params" class="space-y-6 mb-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-3 p-4 bg-red-50 rounded-lg border border-red-200">
+              <div class="flex items-center space-x-2"><label class="block text-sm font-medium text-red-800">Umbral Agresor</label>
+                <div class="group relative">
+                  <svg class="w-4 h-4 text-red-600 cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                  <div class="absolute bottom-6 left-0 hidden group-group-hover:block bg-gray-800 text-white text-xs rounded p-2 w-64 z-10">Umbral para clasificar como agresor. Alto = más estricto.</div>
+                </div>
+              </div>
+              <input type="range" id="aggressor_thr" min="1.0" max="5.0" step="0.1" value="2.8" class="w-full accent-red-500">
+              <div class="flex justify-between text-xs text-red-600"><span>1.0</span><span class="font-medium">2.8</span><span>5.0</span></div>
+            </div>
+            <div class="space-y-3 p-4 bg-blue-50 rounded-lg border border-blue-200">
+              <div class="flex items-center space-x-2"><label class="block text-sm font-medium text-blue-800">Umbral Víctima</label>
+                <div class="group relative">
+                  <svg class="w-4 h-4 text-blue-600 cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                  <div class="absolute bottom-6 left-0 hidden group-hover:block bg-gray-800 text-white text-xs rounded p-2 w-64 z-10">Bajo = detecta más víctimas potenciales.</div>
+                </div>
+              </div>
+              <input type="range" id="victim_thr" min="0.5" max="3.0" step="0.1" value="1.5" class="w-full accent-blue-500">
+              <div class="flex justify-between text-xs text-blue-600"><span>0.5</span><span class="font-medium">1.5</span><span>3.0</span></div>
+            </div>
           </div>
-          <div class="p-4 bg-blue-50 rounded-lg border border-blue-200">
-            <label class="text-sm font-medium text-blue-800">Umbral Víctima</label>
-            <input type="range" id="victim_thr" min="0" max="1" step="0.1" value="0.6" class="w-full accent-blue-500">
-            <div class="flex justify-between text-xs text-blue-600"><span>Permisivo</span> <span>0.6</span> <span>Estricto</span></div>
+          <div class="p-4 bg-purple-50 rounded-lg border border-purple-200">
+            <div class="flex items-center space-x-2 mb-3"><label class="block text-sm font-medium text-purple-800">Distancia de Proximidad</label>
+              <div class="group relative">
+                <svg class="w-4 h-4 text-purple-600 cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <div class="absolute bottom-6 left-0 hidden group-hover:block bg-gray-800 text-white text-xs rounded p-2 w-64 z-10">Distancia máxima para interacción.</div>
+              </div>
+            </div>
+            <input type="range" id="proximity_thr" min="50" max="300" step="10" value="140" class="w-full accent-purple-500">
+            <div class="flex justify-between text-xs text-purple-600"><span>50px</span><span class="font-medium">140px</span><span>300px</span></div>
           </div>
         </div>
 
-        <div id="advanced-params" class="hidden mt-6 space-y-4 text-sm">
-          <p class="text-gray-600">Parámetros avanzados (próximamente)</p>
+        <!-- Advanced Parameters -->
+        <div id="advanced-params" class="hidden space-y-6">
+          <!-- Aquí van todos tus sliders avanzados (tracking, movimiento, gestos, temporal) -->
+          <!-- Puedes copiarlos de tu HTML original -->
+          <!-- Ejemplo de uno: -->
+          <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <h4 class="text-lg font-semibold text-gray-800 mb-4">Parámetros Avanzados (en desarrollo)</h4>
+            <p class="text-sm text-gray-600">Pronto disponibles: gestos, velocidad, pose, etc.</p>
+          </div>
         </div>
       </div>
 
       <!-- Process Button -->
       <div class="text-center mb-8">
-        <button id="process-btn" class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-4 px-12 rounded-xl text-lg transition-all transform hover:scale-105 shadow-lg">
-          Iniciar Análisis con IA
+        <button id="process-btn" class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-4 px-12 rounded-xl text-lg transition-all duration-200 transform hover:scale-105 shadow-xl border border-red-500">
+          <span>INICIAR ANÁLISIS CON IA</span>
         </button>
+        <p class="text-gray-400 text-sm mt-2">El procesamiento puede tomar varios minutos</p>
       </div>
 
-      <!-- Progress -->
+      <!-- Progress Bar -->
       <div id="progress-container" class="hidden bg-white rounded-2xl card-shadow p-6 mb-8">
         <div class="flex items-center justify-between mb-4">
-          <h3 class="text-lg font-semibold text-gray-800">Procesando...</h3>
+          <h3 class="text-lg font-semibold text-gray-800">Procesando Video...</h3>
           <span id="progress-text" class="text-sm text-gray-600">0%</span>
         </div>
         <div class="w-full bg-gray-200 rounded-full h-3">
-          <div id="progress-bar" class="progress-bar bg-gradient-to-r from-blue-500 to-purple-500 h-3 rounded-full"></div>
+          <div id="progress-bar" class="progress-bar bg-slate-600 h-3 rounded-full shadow-inner"></div>
+        </div>
+        <div class="flex items-center justify-center mt-4 text-sm text-gray-600">
+          <svg class="w-4 h-4 mr-2 processing-animation" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+          Analizando con YOLO + DeepSORT
         </div>
       </div>
 
-      <!-- Results -->
+      <!-- Results Section -->
       <div id="results-section" class="hidden">
-        <h2 class="text-3xl font-bold text-center mb-8">Resultados</h2>
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div class="result-card bg-white rounded-2xl card-shadow p-6">
-            <h3 class="text-xl font-semibold text-gray-800 mb-4">Video Procesado</h3>
-            <div id="processed-video" class="bg-gray-100 rounded-lg aspect-video flex items-center justify-center">
-              <p class="text-gray-500">Aquí aparecerá el video</p>
-            </div>
-          </div>
+        <h2 class="text-3xl font-bold text-white mb-8 text-center">Resultados del Análisis</h2>
+        <div class="bg-white rounded-2xl card-shadow p-6 mb-8">
+          <h3 class="text-lg font-semibold text-gray-800 mb-4">Video Procesado</h3>
+          <video controls class="w-full rounded-lg" id="result-video"></video>
+        </div>
+        <div class="bg-white rounded-2xl card-shadow p-6">
+          <h3 class="text-xl font-semibold text-gray-800 mb-6">Resumen Estadístico</h3>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="text-center p-4 bg-red-50 rounded-lg border border-red-200">
-              <div id="aggressors-count" class="text-3xl font-bold text-red-600">0</div>
+              <div class="text-3xl font-bold text-red-600" id="stat-aggressors">0</div>
               <div class="text-sm text-red-700">Agresores</div>
             </div>
             <div class="text-center p-4 bg-blue-50 rounded-lg border border-blue-200">
-              <div id="victims-count" class="text-3xl font-bold text-blue-600">0</div>
+              <div class="text-3xl font-bold text-blue-600" id="stat-victims">0</div>
               <div class="text-sm text-blue-700">Víctimas</div>
             </div>
             <div class="text-center p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-              <div id="duration" class="text-3xl font-bold text-yellow-600">0s</div>
+              <div class="text-3xl font-bold text-yellow-600" id="stat-duration">00:00</div>
               <div class="text-sm text-yellow-700">Duración</div>
             </div>
           </div>
@@ -175,67 +202,83 @@
   </main>
 
   <script>
-    // Tabs
-    document.getElementById('upload-tab').onclick = () => switchTab('upload');
-    document.getElementById('youtube-tab').onclick = () => switchTab('youtube');
+    // === CONFIGURACIÓN DEL BACKEND ===
+    const BACKEND_URL = "https://tu-usuario-ia-violencia.hf.space/predict"; // CAMBIA ESTO CUANDO SUBAS EL BACKEND
+
+    // === TABS ===
+    document.getElementById('upload-tab').addEventListener('click', () => switchTab('upload'));
+    document.getElementById('youtube-tab').addEventListener('click', () => switchTab('youtube'));
     function switchTab(tab) {
-      document.getElementById('upload-tab').className = tab === 'upload' ? 'tab-active px-6 py-3 rounded-lg font-medium flex items-center space-x-2' : 'tab-inactive px-6 py-3 rounded-lg font-medium flex items-center space-x-2';
-      document.getElementById('youtube-tab').className = tab === 'youtube' ? 'tab-active px-6 py-3 rounded-lg font-medium flex items-center space-x-2' : 'tab-inactive px-6 py-3 rounded-lg font-medium flex items-center space-x-2';
+      document.getElementById('upload-tab').className = tab === 'upload' ? 'tab-active px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2' : 'tab-inactive px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2';
+      document.getElementById('youtube-tab').className = tab === 'youtube' ? 'tab-active px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2' : 'tab-inactive px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2';
       document.getElementById('upload-content').classList.toggle('hidden', tab !== 'upload');
       document.getElementById('youtube-content').classList.toggle('hidden', tab !== 'youtube');
     }
 
-    // Toggle advanced
-    document.getElementById('toggle-params').onclick = () => {
-      const adv = document.getElementById('advanced-params');
-      const btn = document.getElementById('toggle-params');
-      adv.classList.toggle('hidden');
-      btn.querySelector('span').textContent = adv.classList.contains('hidden') ? 'Mostrar Avanzados' : 'Ocultar Avanzados';
-      btn.querySelector('svg').style.transform = adv.classList.contains('hidden') ? '' : 'rotate(180deg)';
-    };
+    // === PARÁMETROS AVANZADOS ===
+    document.getElementById('toggle-params').addEventListener('click', function() {
+      const advanced = document.getElementById('advanced-params');
+      const isHidden = advanced.classList.contains('hidden');
+      advanced.classList.toggle('hidden');
+      this.querySelector('span').textContent = isHidden ? 'Ocultar Avanzados' : 'Mostrar Avanzados';
+      this.querySelector('svg').style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
+    });
 
-    // Process
-    document.getElementById('process-btn').onclick = startProcessing;
-
-    async function startProcessing() {
+    // === PROCESAR ===
+    document.getElementById('process-btn').addEventListener('click', async () => {
       const file = document.getElementById('video-upload').files[0];
       const youtubeUrl = document.getElementById('youtube-url').value.trim();
 
-      if (!file && !youtubeUrl) return alert("Sube un video o ingresa URL");
+      if (!file && !youtubeUrl) {
+        alert('Sube un video o ingresa una URL de YouTube');
+        return;
+      }
 
       const formData = new FormData();
       if (file) formData.append('video', file);
       if (youtubeUrl) formData.append('youtube_url', youtubeUrl);
       formData.append('aggressor_thr', document.getElementById('aggressor_thr').value);
       formData.append('victim_thr', document.getElementById('victim_thr').value);
+      formData.append('proximity_thr', document.getElementById('proximity_thr').value);
 
       document.getElementById('progress-container').classList.remove('hidden');
-      document.getElementById('progress-bar').style.width = '10%';
-      document.getElementById('progress-text').textContent = '10%';
+      let progress = 0;
+      const interval = setInterval(() => {
+        progress += 10;
+        if (progress > 90) progress = 90;
+        document.getElementById('progress-bar').style.width = progress + '%';
+        document.getElementById('progress-text').textContent = progress + '%';
+      }, 500);
 
       try {
-        const res = await fetch('https://TU_BACKEND.hf.space/predict', { method: 'POST', body: formData });
+        const res = await fetch(BACKEND_URL, { method: 'POST', body: formData });
         const data = await res.json();
-
+        clearInterval(interval);
         document.getElementById('progress-bar').style.width = '100%';
         document.getElementById('progress-text').textContent = '100%';
 
         setTimeout(() => {
           document.getElementById('progress-container').classList.add('hidden');
           document.getElementById('results-section').classList.remove('hidden');
-
-          const blob = new Blob([Uint8Array.from(atob(data.video), c => c.charCodeAt(0))], { type: 'video/mp4' });
-          document.getElementById('processed-video').innerHTML = `<video controls class="w-full h-full rounded-lg"><source src="${URL.createObjectURL(blob)}" type="video/mp4"></video>`;
-
-          document.getElementById('aggressors-count').textContent = data.stats.aggressors;
-          document.getElementById('victims-count').textContent = data.stats.victims;
-          document.getElementById('duration').textContent = data.stats.duration + 's';
-        }, 800);
+          document.getElementById('result-video').src = 'data:video/mp4;base64,' + data.video;
+          document.getElementById('stat-aggressors').textContent = data.aggressors;
+          document.getElementById('stat-victims').textContent = data.victims;
+          document.getElementById('stat-duration').textContent = data.duration;
+          document.getElementById('results-section').scrollIntoView({ behavior: 'smooth' });
+        }, 1000);
       } catch (err) {
-        alert("Error: " + err.message);
-        document.getElementById('progress-container').classList.add('hidden');
+        alert('Error: ' + err.message);
       }
-    }
+    });
+
+    // === SUBIDA DE VIDEO ===
+    document.getElementById('video-upload').addEventListener('change', function(e) {
+      if (e.target.files.length > 0) {
+        const fileName = e.target.files[0].name;
+        const area = document.querySelector('#upload-content .border-dashed');
+        area.innerHTML = `<p class="text-green-600 font-medium">Video listo: ${fileName}</p>`;
+      }
+    });
   </script>
 </body>
 </html>
