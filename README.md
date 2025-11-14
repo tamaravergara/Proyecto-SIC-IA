@@ -32,15 +32,4 @@
 
 ---
 
-## Arquitectura del Sistema
 
-```mermaid
-graph TD
-    A[Frontend (Vercel)] -->|POST /predict| B[Backend (Hugging Face)]
-    B --> C[YOLOv8: Detecta personas]
-    C --> D[DeepSORT: Seguimiento]
-    D --> E[Análisis de pose + movimiento]
-    E --> F[Reglas heurísticas]
-    F --> G[Roles: Agresor / Víctima]
-    G --> H[Video + JSON + Estadísticas]
-    H --> A
