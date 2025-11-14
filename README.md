@@ -2,7 +2,7 @@
 ### Sistema de Detección de Violencia en Video
 
 [![Deploy en Vercel](https://img.shields.io/badge/Vercel-Deployed-brightgreen?style=flat&logo=vercel)](https://identificador-victima-agresor.vercel.app)  
-[![Backend en Hugging Face](https://img.shields.io/badge/Hugging%20Face-Backend-blue?style=flat&logo=huggingface)]([https://huggingface.co/spaces/tu-usuario/ia-violencia](https://huggingface.co/spaces/camcel/Identificador_victima_y_agresor/tree/main))  
+[![Backend en Hugging Face](https://img.shields.io/badge/Hugging%20Face-Backend-blue?style=flat&logo=huggingface)](https://huggingface.co/spaces/camcel/Identificador_victima_y_agresor/tree/main)
 [![Licencia: MIT](https://img.shields.io/badge/Licencia-MIT-yellow.svg)](LICENSE)
 
 > **Detecta agresores y víctimas en tiempo real usando YOLOv8 + DeepSORT + IA de comportamiento.**  
