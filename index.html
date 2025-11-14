@@ -140,12 +140,25 @@
 
         <!-- Advanced Parameters -->
         <div id="advanced-params" class="hidden space-y-6">
-          <!-- Aquí van todos tus sliders avanzados (tracking, movimiento, gestos, temporal) -->
-          <!-- Puedes copiarlos de tu HTML original -->
-          <!-- Ejemplo de uno: -->
           <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-            <h4 class="text-lg font-semibold text-gray-800 mb-4">Parámetros Avanzados (en desarrollo)</h4>
-            <p class="text-sm text-gray-600">Pronto disponibles: gestos, velocidad, pose, etc.</p>
+            <h4 class="text-lg font-semibold text-gray-800 mb-4">Parámetros Avanzados</h4>
+            <div class="space-y-4">
+              <div class="space-y-3">
+                <label class="block text-sm font-medium text-gray-700">Duración Mínima (frames)</label>
+                <input type="range" id="min_duration_frames" min="5" max="50" step="5" value="15" class="w-full accent-gray-600">
+                <div class="flex justify-between text-xs text-gray-600"><span>5</span><span class="font-medium">15</span><span>50</span></div>
+              </div>
+              <div class="space-y-3">
+                <label class="block text-sm font-medium text-gray-700">Umbral de Distancia (px)</label>
+                <input type="range" id="dist_threshold_px" min="50" max="150" step="5" value="85" class="w-full accent-gray-600">
+                <div class="flex justify-between text-xs text-gray-600"><span>50px</span><span class="font-medium">85px</span><span>150px</span></div>
+              </div>
+              <div class="space-y-3">
+                <label class="block text-sm font-medium text-gray-700">Umbral de Velocidad</label>
+                <input type="range" id="speed_threshold" min="0.01" max="0.1" step="0.01" value="0.04" class="w-full accent-gray-600">
+                <div class="flex justify-between text-xs text-gray-600"><span>0.01</span><span class="font-medium">0.04</span><span>0.1</span></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -176,24 +189,34 @@
       <!-- Results Section -->
       <div id="results-section" class="hidden">
         <h2 class="text-3xl font-bold text-white mb-8 text-center">Resultados del Análisis</h2>
+        
+        <!-- Summary Card -->
+        <div class="bg-white rounded-2xl card-shadow p-6 mb-8">
+          <h3 class="text-xl font-semibold text-gray-800 mb-4">Resumen del Análisis</h3>
+          <div id="result-summary" class="text-gray-700 whitespace-pre-line bg-gray-50 p-4 rounded-lg"></div>
+        </div>
+
+        <!-- Video Result -->
         <div class="bg-white rounded-2xl card-shadow p-6 mb-8">
           <h3 class="text-lg font-semibold text-gray-800 mb-4">Video Procesado</h3>
           <video controls class="w-full rounded-lg" id="result-video"></video>
         </div>
+
+        <!-- Statistics -->
         <div class="bg-white rounded-2xl card-shadow p-6">
           <h3 class="text-xl font-semibold text-gray-800 mb-6">Resumen Estadístico</h3>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="text-center p-4 bg-red-50 rounded-lg border border-red-200">
               <div class="text-3xl font-bold text-red-600" id="stat-aggressors">0</div>
-              <div class="text-sm text-red-700">Agresores</div>
+              <div class="text-sm text-red-700">Agresores Únicos</div>
             </div>
             <div class="text-center p-4 bg-blue-50 rounded-lg border border-blue-200">
               <div class="text-3xl font-bold text-blue-600" id="stat-victims">0</div>
-              <div class="text-sm text-blue-700">Víctimas</div>
+              <div class="text-sm text-blue-700">Víctimas Únicas</div>
             </div>
-            <div class="text-center p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-              <div class="text-3xl font-bold text-yellow-600" id="stat-duration">00:00</div>
-              <div class="text-sm text-yellow-700">Duración</div>
+            <div class="text-center p-4 bg-green-50 rounded-lg border border-green-200">
+              <div class="text-3xl font-bold text-green-600" id="stat-frames">0</div>
+              <div class="text-sm text-green-700">Frames Procesados</div>
             </div>
           </div>
         </div>
@@ -203,32 +226,21 @@
 
   <script>
     // === CONFIGURACIÓN DEL BACKEND ===
-    const BACKEND_URL = "https://tu-usuario-ia-violencia.hf.space/predict"; // CAMBIA ESTO CUANDO SUBAS EL BACKEND
-    // En tu frontend (React/Vue/etc)
-const API_BASE_URL = 'https://camcel-identificador-victima-y-agresor.hf.space';
-
-// Ejemplo de llamada a tu API
-async function hacerPrediccion(videoData) {
-    try {
-        const response = await fetch(`${API_BASE_URL}/tu-endpoint`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ video: videoData })
-        });
-        return await response.json();
-    } catch (error) {
-        console.error('Error calling API:', error);
-    }
-}
+    const BACKEND_URL = "https://camcel-identificador-victima-y-agresor.hf.space/predict";
 
     // === TABS ===
     document.getElementById('upload-tab').addEventListener('click', () => switchTab('upload'));
     document.getElementById('youtube-tab').addEventListener('click', () => switchTab('youtube'));
+    
     function switchTab(tab) {
-      document.getElementById('upload-tab').className = tab === 'upload' ? 'tab-active px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2' : 'tab-inactive px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2';
-      document.getElementById('youtube-tab').className = tab === 'youtube' ? 'tab-active px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2' : 'tab-inactive px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2';
+      document.getElementById('upload-tab').className = tab === 'upload' ? 
+        'tab-active px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2' : 
+        'tab-inactive px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2';
+      
+      document.getElementById('youtube-tab').className = tab === 'youtube' ? 
+        'tab-active px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2' : 
+        'tab-inactive px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2';
+      
       document.getElementById('upload-content').classList.toggle('hidden', tab !== 'upload');
       document.getElementById('youtube-content').classList.toggle('hidden', tab !== 'youtube');
     }
@@ -248,17 +260,31 @@ async function hacerPrediccion(videoData) {
       const youtubeUrl = document.getElementById('youtube-url').value.trim();
 
       if (!file && !youtubeUrl) {
-        alert('Sube un video o ingresa una URL de YouTube');
+        alert('Por favor, sube un video o ingresa una URL de YouTube');
         return;
       }
 
       const formData = new FormData();
       if (file) formData.append('video', file);
       if (youtubeUrl) formData.append('youtube_url', youtubeUrl);
-      formData.append('aggressor_thr', document.getElementById('aggressor_thr').value);
-      formData.append('victim_thr', document.getElementById('victim_thr').value);
-      formData.append('proximity_thr', document.getElementById('proximity_thr').value);
+      
+      // Parámetros básicos
+      formData.append('aggressor_threshold', document.getElementById('aggressor_thr').value);
+      formData.append('victim_threshold', document.getElementById('victim_thr').value);
+      formData.append('proximity_threshold', document.getElementById('proximity_thr').value);
+      
+      // Parámetros avanzados
+      formData.append('min_duration_frames', document.getElementById('min_duration_frames').value);
+      formData.append('dist_threshold_px', document.getElementById('dist_threshold_px').value);
+      formData.append('speed_threshold', document.getElementById('speed_threshold').value);
+      formData.append('fist_distance_threshold', '0.08');
+      formData.append('face_cover_threshold', '0.10');
+      formData.append('crouch_threshold', '0.25');
+      formData.append('disappearance_threshold', '25');
+      formData.append('movement_history', '15');
+      formData.append('mostrar_interaccion', 'Ambos');
 
+      // Mostrar progreso
       document.getElementById('progress-container').classList.remove('hidden');
       let progress = 0;
       const interval = setInterval(() => {
@@ -269,8 +295,19 @@ async function hacerPrediccion(videoData) {
       }, 500);
 
       try {
-        const res = await fetch(BACKEND_URL, { method: 'POST', body: formData });
+        console.log('Enviando solicitud al backend...');
+        const res = await fetch(BACKEND_URL, { 
+          method: 'POST', 
+          body: formData 
+        });
+        
+        if (!res.ok) {
+          throw new Error(Error del servidor: ${res.status} ${res.statusText});
+        }
+        
         const data = await res.json();
+        console.log('Respuesta recibida:', data);
+        
         clearInterval(interval);
         document.getElementById('progress-bar').style.width = '100%';
         document.getElementById('progress-text').textContent = '100%';
@@ -278,14 +315,33 @@ async function hacerPrediccion(videoData) {
         setTimeout(() => {
           document.getElementById('progress-container').classList.add('hidden');
           document.getElementById('results-section').classList.remove('hidden');
-          document.getElementById('result-video').src = 'data:video/mp4;base64,' + data.video;
-          document.getElementById('stat-aggressors').textContent = data.aggressors;
-          document.getElementById('stat-victims').textContent = data.victims;
-          document.getElementById('stat-duration').textContent = data.duration;
+          
+          // Mostrar video procesado
+          if (data.video) {
+            document.getElementById('result-video').src = 'data:video/mp4;base64,' + data.video;
+          }
+          
+          // Mostrar resumen
+          if (data.resumen) {
+            document.getElementById('result-summary').textContent = data.resumen;
+          }
+          
+          // Mostrar estadísticas
+          if (data.log_json) {
+            document.getElementById('stat-aggressors').textContent = data.log_json.unique_aggressors || 0;
+            document.getElementById('stat-victims').textContent = data.log_json.unique_victims || 0;
+            document.getElementById('stat-frames').textContent = data.log_json.frames_with_aggressor || 0;
+          }
+          
+          // Scroll a resultados
           document.getElementById('results-section').scrollIntoView({ behavior: 'smooth' });
         }, 1000);
+        
       } catch (err) {
-        alert('Error: ' + err.message);
+        console.error('Error completo:', err);
+        alert('Error al procesar el video: ' + err.message);
+        clearInterval(interval);
+        document.getElementById('progress-container').classList.add('hidden');
       }
     });
 
@@ -293,9 +349,23 @@ async function hacerPrediccion(videoData) {
     document.getElementById('video-upload').addEventListener('change', function(e) {
       if (e.target.files.length > 0) {
         const fileName = e.target.files[0].name;
+        const fileSize = (e.target.files[0].size / (1024 * 1024)).toFixed(2);
         const area = document.querySelector('#upload-content .border-dashed');
-        area.innerHTML = `<p class="text-green-600 font-medium">Video listo: ${fileName}</p>`;
+        area.innerHTML = `
+          <div class="text-green-600">
+            <svg class="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <p class="font-medium">Video listo: ${fileName}</p>
+            <p class="text-sm text-green-500">Tamaño: ${fileSize} MB</p>
+          </div>
+        `;
       }
+    });
+
+    // Inicialización
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Aplicación iniciada. Backend:', BACKEND_URL);
     });
   </script>
 </body>
