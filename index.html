@@ -1,72 +1,617 @@
-<!DOCTYPE html>
-<html lang="es">
+<!doctype html>
+<html lang="es" class="h-full">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Test Rápido</title>
+  <title>Violence Detection AI System</title>
   <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gradient-to-br from-indigo-900 to-purple-900 min-h-screen flex items-center justify-center">
-  <div class="bg-white rounded-2xl shadow-2xl p-10 max-w-2xl w-full">
-    <h1 class="text-3xl font-bold text-center mb-8">Identificador Víctima y Agresor</h1>
+  <style>
+    body {
+      box-sizing: border-box;
+    }
     
-    <div id="upload-area" class="border-4 border-dashed border-gray-400 rounded-xl p-16 text-center mb-8">
-      <input type="file" id="video-upload" accept="video/*" class="hidden">
-      <p class="text-xl text-gray-600 mb-4">Sube tu video aquí</p>
-      <button type="button" onclick="document.getElementById('video-upload').click()" class="bg-blue-600 text-white px-8 py-4 rounded-lg text-xl">
-        Seleccionar Video
-      </button>
+    .gradient-bg {
+      background: linear-gradient(135deg, #1e3a8a 0%, #3730a3 50%, #581c87 100%);
+    }
+    
+    .glass-effect {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .card-shadow {
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    
+    .processing-animation {
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    .tab-active {
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      color: white;
+    }
+    
+    .tab-inactive {
+      background: rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .parameter-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+    
+    .progress-bar {
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+    
+    .result-card {
+      transition: all 0.3s ease;
+    }
+    
+    .result-card:hover {
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body class="h-full gradient-bg font-sans text-gray-900">
+  <main class="min-h-full">
+    <!-- Header -->
+    <header class="glass-effect border-b border-white border-opacity-20">
+      <div class="max-w-7xl mx-auto px-6 py-6">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-4">
+            <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-500 rounded-xl flex items-center justify-center">
+              <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+              </svg>
+            </div>
+            <div>
+              <h1 id="main-title" class="text-2xl font-bold text-white">Identificador Víctima y Agresor</h1>
+              <p id="subtitle" class="text-sm text-white text-opacity-80">Sistema de Detección de Violencia con IA</p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-3">
+            <div class="flex items-center space-x-2 bg-green-500 bg-opacity-20 px-3 py-2 rounded-lg">
+              <div class="w-2 h-2 bg-green-400 rounded-full processing-animation"></div>
+              <span class="text-green-300 text-sm font-medium">Sistema Listo</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <div class="max-w-7xl mx-auto px-6 py-8">
+      <!-- Input Section -->
+      <div class="bg-white rounded-2xl card-shadow p-8 mb-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+          <svg class="w-6 h-6 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+          </svg> Fuente de Video</h2>
+        <!-- Tabs -->
+        <div class="flex space-x-2 mb-6">
+          <button id="upload-tab" class="tab-active px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+            </svg>
+            <span id="upload-tab-title">Subir Video Local</span>
+          </button>
+          <button id="youtube-tab" class="tab-inactive px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+            </svg>
+            <span id="youtube-tab-title">URL de YouTube</span>
+          </button>
+        </div>
+        <!-- Upload Content -->
+        <div id="upload-content" class="tab-content">
+          <div class="border-2 border-dashed border-gray-300 rounded-xl p-12 text-center hover:border-blue-400 transition-colors duration-200" id="upload-area">
+            <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+            </svg>
+            <h3 class="text-lg font-medium text-gray-700 mb-2">Arrastra tu video aquí</h3>
+            <p class="text-gray-500 mb-4">o haz clic para seleccionar un archivo</p>
+            <input type="file" id="video-upload" accept="video/*" class="hidden">
+            <button onclick="document.getElementById('video-upload').click()" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors duration-200">Seleccionar Video</button>
+            <p class="text-xs text-gray-400 mt-2">Formatos soportados: MP4, AVI, MOV, MKV</p>
+          </div>
+        </div>
+        <!-- YouTube Content -->
+        <div id="youtube-content" class="tab-content hidden">
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">URL de YouTube</label>
+              <input type="url" id="youtube-url" placeholder="https://www.youtube.com/watch?v=..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            </div>
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div class="flex items-start">
+                <svg class="w-5 h-5 text-blue-600 mt-0.5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <div>
+                  <h4 class="text-sm font-medium text-blue-800">Nota sobre videos de YouTube</h4>
+                  <p class="text-sm text-blue-700 mt-1">El procesamiento puede tomar más tiempo dependiendo de la duración y calidad del video.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Parameters Section -->
+      <div class="bg-white rounded-2xl card-shadow p-8 mb-8">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-bold text-gray-800 flex items-center">
+            <svg class="w-6 h-6 text-purple-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            </svg> Parámetros de Detección</h2>
+          <button id="toggle-params" class="text-blue-600 hover:text-blue-700 font-medium flex items-center space-x-1">
+            <span>Mostrar Avanzados</span>
+            <svg class="w-4 h-4 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </button>
+        </div>
+        <!-- Basic Parameters -->
+        <div id="basic-params" class="space-y-6 mb-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-3 p-4 bg-red-50 rounded-lg border border-red-200">
+              <div class="flex items-center space-x-2">
+                <label class="block text-sm font-medium text-red-800">Umbral Agresor</label>
+                <div class="group relative">
+                  <svg class="w-4 h-4 text-red-600 cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  <div class="absolute bottom-6 left-0 hidden group-hover:block bg-gray-800 text-white text-xs rounded p-2 w-64 z-10">
+                    Umbral de puntuación para clasificar a alguien como agresor. Valores más altos = detección más estricta.
+                  </div>
+                </div>
+              </div>
+              <input type="range" id="agg_thr" min="1.0" max="5.0" step="0.1" value="2.8" class="w-full accent-red-500">
+              <div class="flex justify-between text-xs text-red-600">
+                <span>1.0 (Permisivo)</span> <span class="font-medium" id="agg_val">2.8</span> <span>5.0 (Estricto)</span>
+              </div>
+            </div>
+            <div class="space-y-3 p-4 bg-blue-50 rounded-lg border border-blue-200">
+              <div class="flex items-center space-x-2">
+                <label class="block text-sm font-medium text-blue-800">Umbral Víctima</label>
+                <div class="group relative">
+                  <svg class="w-4 h-4 text-blue-600 cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  <div class="absolute bottom-6 left-0 hidden group-hover:block bg-gray-800 text-white text-xs rounded p-2 w-64 z-10">
+                    Umbral de puntuación para clasificar a alguien como víctima. Valores más bajos = detección más sensible.
+                  </div>
+                </div>
+              </div>
+              <input type="range" id="vic_thr" min="0.5" max="3.0" step="0.1" value="1.5" class="w-full accent-blue-500">
+              <div class="flex justify-between text-xs text-blue-600">
+                <span>0.5 (Permisivo)</span> <span class="font-medium" id="vic_val">1.5</span> <span>3.0 (Estricto)</span>
+              </div>
+            </div>
+          </div>
+          <div class="p-4 bg-purple-50 rounded-lg border border-purple-200">
+            <div class="flex items-center space-x-2 mb-3">
+              <label class="block text-sm font-medium text-purple-800">Proximidad (px)</label>
+              <div class="group relative">
+                <svg class="w-4 h-4 text-purple-600 cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <div class="absolute bottom-6 left-0 hidden group-hover:block bg-gray-800 text-white text-xs rounded p-2 w-64 z-10">
+                  Distancia máxima en píxeles para considerar interacción.
+                </div>
+              </div>
+            </div>
+            <input type="range" id="prox_thr" min="50" max="300" step="10" value="140" class="w-full accent-purple-500">
+            <div class="flex justify-between text-xs text-purple-600">
+              <span>50 (Cerca)</span> <span class="font-medium" id="prox_val">140</span> <span>300 (Lejos)</span>
+            </div>
+          </div>
+        </div>
+        <!-- Advanced Parameters -->
+        <div id="advanced-params" class="hidden space-y-6">
+          <!-- Tracking Parameters -->
+          <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <h4 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+              <svg class="w-5 h-5 text-gray-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-1.447-.894L15 4m0 13V4m-6 3l6-3"></path>
+              </svg> Parámetros de Seguimiento</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="space-y-2">
+                <div class="flex items-center space-x-2">
+                  <label class="block text-sm font-medium text-gray-700">Desaparición</label>
+                  <div class="group relative">
+                    <svg class="w-4 h-4 text-gray-500 cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <div class="absolute bottom-6 left-0 hidden group-hover:block bg-gray-800 text-white text-xs rounded p-2 w-64 z-10">
+                      Frames para eliminar track si desaparece.
+                    </div>
+                  </div>
+                </div>
+                <input type="range" id="disappearance_thr" min="5" max="50" step="5" value="25" class="w-full">
+                <div class="flex justify-between text-xs text-gray-500">
+                  <span>5</span> <span class="font-medium" id="disappearance_val">25</span> <span>50</span>
+                </div>
+              </div>
+              <div class="space-y-2">
+                <div class="flex items-center space-x-2">
+                  <label class="block text-sm font-medium text-gray-700">Historial Movimiento</label>
+                  <div class="group relative">
+                    <svg class="w-4 h-4 text-gray-500 cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <div class="absolute bottom-6 left-0 hidden group-hover:block bg-gray-800 text-white text-xs rounded p-2 w-64 z-10">
+                      Longitud de historial para tracking estable.
+                    </div>
+                  </div>
+                </div>
+                <input type="range" id="movement_history" min="10" max="100" step="10" value="15" class="w-full">
+                <div class="flex justify-between text-xs text-gray-500">
+                  <span>10</span> <span class="font-medium" id="movement_val">15</span> <span>100</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Movement Parameters -->
+          <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <h4 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+              <svg class="w-5 h-5 text-gray-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+              </svg> Parámetros de Movimiento</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="space-y-2">
+                <div class="flex items-center space-x-2">
+                  <label class="block text-sm font-medium text-gray-700">Velocidad</label>
+                  <div class="group relative">
+                    <svg class="w-4 h-4 text-gray-500 cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <div class="absolute bottom-6 left-0 hidden group-hover:block bg-gray-800 text-white text-xs rounded p-2 w-64 z-10">
+                      Umbral de velocidad para movimiento significativo.
+                    </div>
+                  </div>
+                </div>
+                <input type="range" id="speed_thr" min="0.01" max="0.1" step="0.01" value="0.04" class="w-full">
+                <div class="flex justify-between text-xs text-gray-500">
+                  <span>0.01</span> <span class="font-medium" id="speed_val">0.04</span> <span>0.1</span>
+                </div>
+              </div>
+              <div class="space-y-2">
+                <div class="flex items-center space-x-2">
+                  <label class="block text-sm font-medium text-gray-700">Distancia (px)</label>
+                  <div class="group relative">
+                    <svg class="w-4 h-4 text-gray-500 cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <div class="absolute bottom-6 left-0 hidden group-hover:block bg-gray-800 text-white text-xs rounded p-2 w-64 z-10">
+                      Umbral de distancia para heurísticas de roles.
+                    </div>
+                  </div>
+                </div>
+                <input type="range" id="dist_thr" min="20" max="200" step="10" value="85" class="w-full">
+                <div class="flex justify-between text-xs text-gray-500">
+                  <span>20</span> <span class="font-medium" id="dist_val">85</span> <span>200</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Gesture Detection Parameters -->
+          <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <h4 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+              <svg class="w-5 h-5 text-gray-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11"></path>
+              </svg> Detección de Gestos</h4>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="space-y-2">
+                <div class="flex items-center space-x-2">
+                  <label class="block text-sm font-medium text-gray-700">Puños</label>
+                  <div class="group relative">
+                    <svg class="w-4 h-4 text-gray-500 cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <div class="absolute bottom-6 left-0 hidden group-hover:block bg-gray-800 text-white text-xs rounded p-2 w-64 z-10">
+                      Umbral para detectar puños cerrados.
+                    </div>
+                  </div>
+                </div>
+                <input type="range" id="fist_thr" min="0.01" max="0.2" step="0.01" value="0.08" class="w-full">
+                <div class="flex justify-between text-xs text-gray-500">
+                  <span>0.01</span> <span class="font-medium" id="fist_val">0.08</span> <span>0.2</span>
+                </div>
+              </div>
+              <div class="space-y-2">
+                <div class="flex items-center space-x-2">
+                  <label class="block text-sm font-medium text-gray-700">Cobertura Facial</label>
+                  <div class="group relative">
+                    <svg class="w-4 h-4 text-gray-500 cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <div class="absolute bottom-6 left-0 hidden group-hover:block bg-gray-800 text-white text-xs rounded p-2 w-64 z-10">
+                      Umbral para manos cubriendo cara.
+                    </div>
+                  </div>
+                </div>
+                <input type="range" id="face_cover_thr" min="0.05" max="0.3" step="0.01" value="0.10" class="w-full">
+                <div class="flex justify-between text-xs text-gray-500">
+                  <span>0.05</span> <span class="font-medium" id="face_cover_val">0.10</span> <span>0.3</span>
+                </div>
+              </div>
+              <div class="space-y-2">
+                <div class="flex items-center space-x-2">
+                  <label class="block text-sm font-medium text-gray-700">Agachado</label>
+                  <div class="group relative">
+                    <svg class="w-4 h-4 text-gray-500 cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <div class="absolute bottom-6 left-0 hidden group-hover:block bg-gray-800 text-white text-xs rounded p-2 w-64 z-10">
+                      Umbral para postura agachada.
+                    </div>
+                  </div>
+                </div>
+                <input type="range" id="crouch_thr" min="0.1" max="0.5" step="0.05" value="0.25" class="w-full">
+                <div class="flex justify-between text-xs text-gray-500">
+                  <span>0.1</span> <span class="font-medium" id="crouch_val">0.25</span> <span>0.5</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Temporal Parameters -->
+          <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <h4 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+              <svg class="w-5 h-5 text-gray-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg> Parámetros Temporales</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="space-y-2">
+                <div class="flex items-center space-x-2">
+                  <label class="block text-sm font-medium text-gray-700">Duración Mínima (frames)</label>
+                  <div class="group relative">
+                    <svg class="w-4 h-4 text-gray-500 cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <div class="absolute bottom-6 left-0 hidden group-hover:block bg-gray-800 text-white text-xs rounded p-2 w-64 z-10">
+                      Mínimo frames para considerar violencia.
+                    </div>
+                  </div>
+                </div>
+                <input type="range" id="min_duration" min="5" max="60" step="5" value="15" class="w-full">
+                <div class="flex justify-between text-xs text-gray-500">
+                  <span>5</span> <span class="font-medium" id="min_duration_val">15</span> <span>60</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Process Button -->
+      <div class="text-center mb-8">
+        <button id="process-btn" class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-4 px-12 rounded-xl text-lg transition-all duration-200 transform hover:scale-105 shadow-lg">
+          <span id="process-button-text">🚀 Iniciar Análisis con IA</span>
+        </button>
+        <p class="text-gray-500 text-sm mt-2">El procesamiento puede tomar varios minutos dependiendo del video</p>
+      </div>
+      <!-- Progress Bar -->
+      <div id="progress-container" class="hidden bg-white rounded-2xl card-shadow p-6 mb-8">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold text-gray-800">Procesando Video...</h3>
+          <span id="progress-text" class="text-sm text-gray-600">0%</span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-3">
+          <div id="progress-bar" class="progress-bar bg-gradient-to-r from-blue-500 to-purple-500 h-3 rounded-full"></div>
+        </div>
+        <div class="flex items-center justify-center mt-4 text-sm text-gray-600">
+          <svg class="w-4 h-4 mr-2 processing-animation" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+          </svg> Analizando posturas y movimientos con YOLO + DeepSort
+        </div>
+      </div>
+      <!-- Results Section -->
+      <div id="results-section" class="hidden">
+        <h2 id="results-title" class="text-3xl font-bold text-white mb-8 text-center">Resultados del Análisis</h2>
+        <!-- View Selector -->
+        <div class="bg-white rounded-2xl card-shadow p-6 mb-8">
+          <h3 class="text-lg font-semibold text-gray-800 mb-4">Selector de Vista</h3>
+          <div class="flex flex-wrap gap-3">
+            <button class="view-btn active bg-blue-500 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200" data-view="Ambos"> 👥 Ambos </button>
+            <button class="view-btn bg-gray-200 text-gray-700 hover:bg-gray-300 px-4 py-2 rounded-lg font-medium transition-all duration-200" data-view="Agresor"> 🔴 Solo Agresor </button>
+            <button class="view-btn bg-gray-200 text-gray-700 hover:bg-gray-300 px-4 py-2 rounded-lg font-medium transition-all duration-200" data-view="Víctima"> 🔵 Solo Víctima </button>
+          </div>
+        </div>
+        <!-- Results Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <!-- Video Results -->
+          <div class="result-card bg-white rounded-2xl card-shadow p-6">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+              <svg class="w-6 h-6 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+              </svg> Video Procesado</h3>
+            <video id="output-video" controls class="w-full rounded-2xl shadow-2xl"></video>
+          </div>
+          <!-- First Interaction -->
+          <div class="result-card bg-white rounded-2xl card-shadow p-6">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+              <svg class="w-6 h-6 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg> Primera Interacción</h3>
+            <img id="selected-img" class="w-full rounded-2xl shadow-2xl" alt="Captura de interacción">
+          </div>
+        </div>
+        <!-- Statistics -->
+        <div class="bg-white rounded-2xl card-shadow p-6 mt-8">
+          <h3 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+            <svg class="w-6 h-6 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg> Resumen Estadístico</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="text-center p-4 bg-red-50 rounded-lg border border-red-200">
+              <div id="aggressors" class="text-3xl font-bold text-red-600">0</div>
+              <div class="text-sm text-red-700">Agresores Detectados</div>
+            </div>
+            <div class="text-center p-4 bg-blue-50 rounded-lg border border-blue-200">
+              <div id="victims" class="text-3xl font-bold text-blue-600">0</div>
+              <div class="text-sm text-blue-700">Víctimas Identificadas</div>
+            </div>
+            <div class="text-center p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+              <div id="violent-frames" class="text-3xl font-bold text-yellow-600">0</div>
+              <div class="text-sm text-yellow-700">Frames con Violencia</div>
+            </div>
+          </div>
+          <div class="mt-6 p-4 bg-gray-50 rounded-lg">
+            <h4 class="font-semibold text-gray-800 mb-2">Detalles del Análisis:</h4>
+            <pre id="summary" class="text-sm text-gray-600 whitespace-pre-wrap"></pre>
+          </div>
+        </div>
+      </div>
     </div>
-
-    <div class="text-center">
-      <button id="process-btn" class="bg-gradient-to-r from-green-500 to-teal-600 text-white font-bold py-6 px-16 rounded-xl text-2xl hover:scale-105 transition">
-        INICIAR ANÁLISIS
-      </button>
-    </div>
-
-    <div id="progress" class="mt-8 text-center hidden">
-      <p class="text-2xl">Procesando... <span id="percent">0%</span></p>
-    </div>
-  </div>
-
+  </main>
   <script>
-    const BACKEND = "https://camcel-sic.hf.space/process";
+    const BACKEND = "/api/process"; // Tu proxy en Vercel
 
-    document.getElementById('video-upload').addEventListener('change', e => {
-      if (e.target.files[0]) {
-        document.getElementById('upload-area').innerHTML = `<p class="text-3xl font-bold text-green-600">¡Video cargado!</p><p class="text-xl">${e.target.files[0].name}</p>`;
+    // Tab functionality
+    document.getElementById('upload-tab').addEventListener('click', function() {
+      switchTab('upload');
+    });
+
+    document.getElementById('youtube-tab').addEventListener('click', function() {
+      switchTab('youtube');
+    });
+
+    function switchTab(tab) {
+      document.getElementById('upload-tab').className = tab === 'upload' ? 'tab-active px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2' : 'tab-inactive px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2';
+      document.getElementById('youtube-tab').className = tab === 'youtube' ? 'tab-active px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2' : 'tab-inactive px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2';
+      document.getElementById('upload-content').classList.toggle('hidden', tab !== 'upload');
+      document.getElementById('youtube-content').classList.toggle('hidden', tab !== 'youtube');
+    }
+
+    // Actualizar valores en sliders
+    document.getElementById('agg_thr').oninput = (e) => document.getElementById('agg_val').textContent = e.target.value;
+    document.getElementById('vic_thr').oninput = (e) => document.getElementById('vic_val').textContent = e.target.value;
+    document.getElementById('prox_thr').oninput = (e) => document.getElementById('prox_val').textContent = e.target.value;
+    document.getElementById('disappearance_thr').oninput = (e) => document.getElementById('disappearance_val').textContent = e.target.value;
+    document.getElementById('movement_history').oninput = (e) => document.getElementById('movement_val').textContent = e.target.value;
+    document.getElementById('speed_thr').oninput = (e) => document.getElementById('speed_val').textContent = e.target.value;
+    document.getElementById('dist_thr').oninput = (e) => document.getElementById('dist_val').textContent = e.target.value;
+    document.getElementById('fist_thr').oninput = (e) => document.getElementById('fist_val').textContent = e.target.value;
+    document.getElementById('face_cover_thr').oninput = (e) => document.getElementById('face_cover_val').textContent = e.target.value;
+    document.getElementById('crouch_thr').oninput = (e) => document.getElementById('crouch_val').textContent = e.target.value;
+    document.getElementById('min_duration').oninput = (e) => document.getElementById('min_duration_val').textContent = e.target.value;
+
+    // File upload handling
+    document.getElementById('video-upload').addEventListener('change', function(e) {
+      if (e.target.files.length > 0) {
+        const fileName = e.target.files[0].name;
+        document.getElementById('upload-area').innerHTML = `
+          <svg class="w-16 h-16 text-green-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <h3 class="text-lg font-medium text-gray-700 mb-2">Video cargado exitosamente</h3>
+          <p class="text-gray-500 mb-4">${fileName}</p>
+          <button onclick="document.getElementById('video-upload').click()" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors duration-200">
+            Cambiar Video
+          </button>
+        `;
       }
     });
 
-    document.getElementById('process-btn').onclick = async () => {
+    // Parameters toggle
+    document.getElementById('toggle-params').addEventListener('click', function() {
+      const advanced = document.getElementById('advanced-params');
+      const isHidden = advanced.classList.contains('hidden');
+      advanced.classList.toggle('hidden');
+      this.querySelector('span').textContent = isHidden ? 'Ocultar Avanzados' : 'Mostrar Avanzados';
+      this.querySelector('svg').style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
+    });
+
+    // Process button
+    document.getElementById('process-btn').addEventListener('click', async () => {
       const file = document.getElementById('video-upload').files[0];
-      if (!file) return alert("¡Sube un video primero!");
+      const yt = document.getElementById('youtube-url').value.trim();
+      if (!file && !yt) return alert("Sube un video o ingresa una URL de YouTube");
 
       const form = new FormData();
-      form.append("video", file);
+      if (file) form.append("video", file);
+      if (yt) form.append("youtube_url", yt);
+      form.append("aggressor_threshold", document.getElementById('agg_thr').value);
+      form.append("victim_threshold", document.getElementById('vic_thr').value);
+      form.append("proximity_threshold", document.getElementById('prox_thr').value);
+      form.append("min_duration_frames", document.getElementById('min_duration').value);
+      form.append("dist_threshold_px", document.getElementById('dist_thr').value);
+      form.append("speed_threshold", document.getElementById('speed_thr').value);
+      form.append("fist_distance_threshold", document.getElementById('fist_thr').value);
+      form.append("face_cover_threshold", document.getElementById('face_cover_thr').value);
+      form.append("crouch_threshold", document.getElementById('crouch_thr').value);
+      form.append("disappearance_threshold", document.getElementById('disappearance_thr').value);
+      form.append("movement_history", document.getElementById('movement_history').value);
+      form.append("mostrar_interaccion", "Ambos");
 
-      document.getElementById('progress').classList.remove('hidden');
+      document.getElementById('progress-container').classList.remove('hidden');
+      document.getElementById('results-section').classList.add('hidden');
+
       let p = 0;
       const iv = setInterval(() => {
-        p += 10;
-        document.getElementById('percent').textContent = p + '%';
-        if (p >= 90) clearInterval(iv);
-      }, 1000);
+        p = Math.min(p + 10, 90);
+        document.getElementById('progress-bar').style.width = p + '%';
+        document.getElementById('progress-text').textContent = p + '%';
+      }, 800);
 
       try {
-        const res = await fetch(BACKEND, { method: "POST", body: form });
-        clearInterval(iv);
-        document.getElementById('percent').textContent = '100%';
+        const r = await fetch(BACKEND, { method: "POST", body: form });
+        if (!r.ok) throw new Error(`Error ${r.status}: Verifica el endpoint /predict en HF Space`);
+        const data = await r.json();
 
-        if (!res.ok) throw new Error(await res.text());
-        const data = await res.json();
-        alert("¡ÉXITO! Video procesado correctamente");
-        console.log(data);
+        clearInterval(iv);
+        document.getElementById('progress-bar').style.width = '100%';
+        document.getElementById('progress-text').textContent = '100%';
+
+        setTimeout(() => {
+          document.getElementById('progress-container').classList.add('hidden');
+          document.getElementById('results-section').classList.remove('hidden');
+          document.getElementById('summary').textContent = data.resumen || "Análisis completado";
+          if (data.video) document.getElementById('output-video').src = "data:video/avi;base64," + data.video;
+          if (data.selected_img) document.getElementById('selected-img').src = "data:image/jpeg;base64," + data.selected_img;
+          document.getElementById('aggressors').textContent = data.agresores || 0;
+          document.getElementById('victims').textContent = data.victimas || 0;
+          document.getElementById('violent-frames').textContent = data.agg_frames || data.frames_procesados || 0;
+          document.getElementById('results-section').scrollIntoView({ behavior: 'smooth' });
+        }, 1000);
       } catch (e) {
-        alert("Error: " + e.message);
-        console.error(e);
+        clearInterval(iv);
+        document.getElementById('progress-container').classList.add('hidden');
+        alert("ERROR: " + e.message + "\nRevisa el Space HF y deep-sort-realtime==1.3.2");
       }
-    };
+    });
+
+    // View selector (cambia imagen)
+    document.querySelectorAll('.view-btn').forEach(btn => {
+      btn.addEventListener('click', async function() {
+        document.querySelectorAll('.view-btn').forEach(b => b.classList.replace('bg-blue-500', 'bg-gray-200'));
+        document.querySelectorAll('.view-btn').forEach(b => b.classList.replace('text-white', 'text-gray-700'));
+        this.classList.replace('bg-gray-200', 'bg-blue-500');
+        this.classList.replace('text-gray-700', 'text-white');
+
+        const form = new FormData();
+        form.append("mostrar_interaccion", this.dataset.view);
+
+        try {
+          const r = await fetch('/api/process/change_image', { method: "POST", body: form });  // Asume proxy maneja /change_image también, o ajusta URL
+          if (!r.ok) throw new Error('Error cambiando vista');
+          const data = await r.json();
+          if (data.selected_img) document.getElementById('selected-img').src = "data:image/jpeg;base64," + data.selected_img;
+          document.getElementById('summary').textContent = data.resumen || document.getElementById('summary').textContent;
+        } catch (e) {
+          alert("Error cambiando vista: " + e.message);
+        }
+      });
+    });
   </script>
 </body>
 </html>
