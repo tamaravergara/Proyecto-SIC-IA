@@ -5,40 +5,76 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Identificador Víctima y Agresor</title>
 
+    <!-- TailwindCSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
     <style>
-        body { font-family: Arial; margin: 40px; }
-        #results { margin-top: 20px; }
-        video, img { max-width: 100%; margin-top: 10px; }
-        .loader { display: none; font-weight: bold; color: #444; }
+        pre {
+            white-space: pre-wrap;
+            background: #f7f7f7;
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+
+        #loader {
+            display: none;
+        }
     </style>
 </head>
-<body>
+<body class="bg-gray-100 min-h-screen flex justify-center px-4">
 
-<h1>Identificador Víctima y Agresor</h1>
+<div class="w-full max-w-3xl py-10">
+    <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">
+        Identificador Víctima y Agresor
+    </h1>
 
-<p>Sube un video o ingresa una URL de YouTube:</p>
+    <div class="bg-white p-6 rounded-xl shadow-md border">
 
-<form id="form">
-    <input type="file" id="video" name="video" accept="video/*"><br><br>
-    <input type="text" id="youtube_url" name="youtube_url" placeholder="https://youtube.com/..."><br><br>
+        <form id="form" class="space-y-6">
 
-    <label>Mostrar interacción:</label>
-    <select id="mostrar_interaccion" name="mostrar_interaccion">
-        <option value="Ambos">Ambos</option>
-        <option value="Agresor">Agresor</option>
-        <option value="Víctima">Víctima</option>
-    </select>
+            <div>
+                <label class="block font-semibold text-gray-700 mb-1">Subir video</label>
+                <input type="file" id="video" name="video" accept="video/*"
+                    class="w-full border rounded p-2">
+            </div>
 
-    <br><br>
-    <button type="submit">Procesar Video</button>
-</form>
+            <div>
+                <label class="block font-semibold text-gray-700 mb-1">O URL de YouTube</label>
+                <input type="text" id="youtube_url" name="youtube_url"
+                       placeholder="https://youtube.com/..."
+                       class="w-full border rounded p-2">
+            </div>
 
-<div id="loader" class="loader">Procesando... Esto puede tardar 20–40 segundos.</div>
+            <div>
+                <label class="block font-semibold text-gray-700 mb-1">Mostrar interacción</label>
+                <select id="mostrar_interaccion" name="mostrar_interaccion"
+                        class="w-full border rounded p-2 bg-white">
+                    <option value="Ambos">Ambos</option>
+                    <option value="Agresor">Agresor</option>
+                    <option value="Víctima">Víctima</option>
+                </select>
+            </div>
 
-<div id="results"></div>
+            <button type="submit"
+                class="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition">
+                Procesar Video
+            </button>
+        </form>
+
+        <!-- Loader -->
+        <div id="loader" class="mt-6 text-center">
+            <div class="animate-spin h-8 w-8 mx-auto border-4 border-blue-500 border-t-transparent rounded-full"></div>
+            <p class="text-gray-600 mt-2 font-medium">Procesando... Esto puede tardar 20–40 segundos.</p>
+        </div>
+
+        <!-- Results -->
+        <div id="results" class="mt-8"></div>
+
+    </div>
+</div>
 
 <script>
-const BACKEND_BASE = "/api";  // 🔥 No tocar si usas vercel.json
+const BACKEND_BASE = "/api"; // No tocar
 
 const form = document.getElementById("form");
 const results = document.getElementById("results");
@@ -51,36 +87,60 @@ form.addEventListener("submit", async (e) => {
 
     const fd = new FormData(form);
 
-    const r = await fetch(BACKEND_BASE + "/process", {
-        method: "POST",
-        body: fd
-    });
+    try {
+        const r = await fetch(BACKEND_BASE + "/process", {
+            method: "POST",
+            body: fd
+        });
 
-    const data = await r.json();
-    loader.style.display = "none";
+        const text = await r.text();
 
-    if (data.error) {
-        results.innerHTML = `<p style="color:red">${data.error}</p>`;
-        return;
+        let data;
+        try {
+            data = JSON.parse(text);
+        } catch (err) {
+            results.innerHTML = `
+                <p class="text-red-600 font-semibold">Error del servidor: respuesta inesperada.</p>
+                <pre>${text}</pre>
+            `;
+            loader.style.display = "none";
+            return;
+        }
+
+        loader.style.display = "none";
+
+        if (data.error) {
+            results.innerHTML = `<p class="text-red-600 font-semibold">${data.error}</p>`;
+            return;
+        }
+
+        let html = "";
+
+        if (data.resumen) {
+            html += `<div class="mb-4"><pre>${data.resumen}</pre></div>`;
+        }
+
+        if (data.video) {
+            html += `
+                <h3 class="font-semibold text-gray-800 mt-6">Video procesado</h3>
+                <video id="output-video" controls class="rounded-lg shadow-md mt-2 w-full"
+                    src="data:video/mp4;base64,${data.video}">
+                </video>`;
+        }
+
+        if (data.selected_img) {
+            html += `
+                <h3 class="font-semibold text-gray-800 mt-6">Frame seleccionado</h3>
+                <img id="output-img" class="rounded-lg shadow mt-2"
+                     src="data:image/jpeg;base64,${data.selected_img}">`;
+        }
+
+        results.innerHTML = html;
+
+    } catch (error) {
+        loader.style.display = "none";
+        results.innerHTML = `<p class="text-red-600 font-semibold">Error: ${error.message}</p>`;
     }
-
-    let html = "";
-
-    if (data.resumen) {
-        html += `<pre>${data.resumen}</pre>`;
-    }
-
-    if (data.video) {
-        html += `<h3>Video procesado</h3>
-        <video id="output-video" controls src="data:video/mp4;base64,${data.video}"></video>`;
-    }
-
-    if (data.selected_img) {
-        html += `<h3>Frame seleccionado</h3>
-        <img id="output-img" src="data:image/jpeg;base64,${data.selected_img}">`;
-    }
-
-    results.innerHTML = html;
 });
 
 /* Cambio de imagen sin reprocesar */
