@@ -28,7 +28,7 @@
 | Progreso en tiempo real | ✅ |
 | Video de salida con bounding boxes | ✅ |
 | Estadísticas: # agresores, # víctimas, duración | ✅ |
-| Parámetros avanzados (gestos, velocidad, proximidad) | 🔄 En desarrollo |
+| Parámetros avanzados (gestos, velocidad, proximidad) | ✅ |
 
 ---
 
