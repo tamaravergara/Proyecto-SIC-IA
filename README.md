@@ -33,7 +33,7 @@
 ---
 
 ## Autoras
-Camila Laura
-Tamara Vergara
+-Camila Laura
+-Tamara Vergara
 
 
