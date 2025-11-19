@@ -32,4 +32,8 @@
 
 ---
 
+## Autoras
+Camila Laura
+Tamara Vergara
+
 
